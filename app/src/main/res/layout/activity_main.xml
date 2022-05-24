@@ -26,4 +26,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+    <ImageView
+        android:id="@+id/trigger_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/microphone_icon"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:id="@+id/user_info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detected_speech"
+        android:textSize="18sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:id="@+id/user_utterance_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_info_text"
+        android:textSize="18sp"
+        android:layout_centerHorizontal="true" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
