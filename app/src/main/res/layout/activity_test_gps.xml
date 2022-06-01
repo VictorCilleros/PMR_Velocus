@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.velocus.TestGpsView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.velocus.View.TestGpsView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/gameViewTestGps"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TestGpsActivity">
 
-</com.velocus.TestGpsView>
+</com.velocus.View.TestGpsView>

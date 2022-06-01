@@ -2,6 +2,7 @@ package com.velocus.model
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,11 +23,12 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.velocus.TestGpsActivity
+import com.velocus.View.SuperView
 
 /**
  * Created by 2poiz' on 20/05/2022
  */
-class Gps( var activity_ : TestGpsActivity) : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+class Gps( var activity_ : Activity, var superView : SuperView) : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private val UPDATE_INTERVAL = (2 * 1000).toLong()  /* 10 secs */
     private val FASTEST_INTERVAL: Long = 2000          /* 2 sec */
@@ -73,8 +75,8 @@ class Gps( var activity_ : TestGpsActivity) : GoogleApiClient.ConnectionCallback
                     mRotation[1] = (Math.toDegrees(mRotation[1].toDouble()).toFloat()+360)%360
                     mRotation[2] = (Math.toDegrees(mRotation[2].toDouble()).toFloat()+360)%360
 
-                    activity_.testGpsView?.orientation = mRotation[0] // Récupération de l'orientation magnétique
-                    activity_.testGpsView?.invalidate() // Actualisation de l'affichage
+                    superView?.orientation = mRotation[0] // Récupération de l'orientation magnétique
+                    superView?.invalidate() // Actualisation de l'affichage
                 }
             }
         }
@@ -151,9 +153,9 @@ class Gps( var activity_ : TestGpsActivity) : GoogleApiClient.ConnectionCallback
                 location?.let { java.lang.Double.toString(it.latitude) } + "," +
                 location?.let { java.lang.Double.toString(it.longitude) }
         if (location != null) {
-            activity_.testGpsView?.mLatitudeTextView = location.latitude.toString() // Récupération de la latitude
-            activity_.testGpsView?.mLongitudeTextView = location.longitude.toString() // Récupération de la longitude
-            activity_.testGpsView?.invalidate() // Actualisation de l'affichage
+            superView?.mLatitudeTextView = location.latitude // Récupération de la latitude
+            superView?.mLongitudeTextView = location.longitude // Récupération de la longitude
+            superView?.invalidate() // Actualisation de l'affichage
         }
         //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
