@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat;
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -18,10 +18,12 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     private var mStartButton: Button? = null
+    private var mSpeechButton: Button? = null
+
 
     companion object {
         // Constante nécessaire pour vérifier la permission audio
-        private const val ASR_PERMISSION_REQUEST_CODE = 0
+        const val ASR_PERMISSION_REQUEST_CODE = 0
     }
 
     private var mSpeechRecognizer: SpeechRecognizer? = null
@@ -34,9 +36,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        verifyAudioPermissions()
+        //verifyAudioPermissions()
 
         // Bouton pour passer au test du GPS:
+
+        mSpeechButton = findViewById<View>(R.id.speechbutton) as Button
+
+        mSpeechButton!!.setOnClickListener(View.OnClickListener {
+            val mainActivityIntent = Intent(this@MainActivity, VocalActivity::class.java)
+            startActivity(mainActivityIntent)
+        })
 
         mStartButton = findViewById<View>(R.id.button2) as Button
 
@@ -45,6 +54,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(mainActivityIntent)
         })
 
+        // Reconnaissance vocale
+
         mUserUtteranceOutput = findViewById(R.id.user_utterance_output)
         mUserInfoText = findViewById(R.id.user_info_text)
 
@@ -52,6 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         val trigger = findViewById<ImageView>(R.id.trigger_icon)
         trigger.setOnClickListener {
+            //Toast.makeText(this, "Clic trigger micro", Toast.LENGTH_SHORT).show()
             // Handle audio sessions here
             if (mIsListening) {
                 handleSpeechEnd()
@@ -65,13 +77,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleSpeechBegin() {
+        Toast.makeText(this, "Appel fun handleSpeechBegin", Toast.LENGTH_SHORT).show()
         // start audio session
         mUserInfoText!!.setText(R.string.listening)
+        //Toast.makeText(this, "mUserInfoText : " + mUserInfoText!!.text, Toast.LENGTH_SHORT).show()
         mIsListening = true
         mSpeechRecognizer!!.startListening(createIntent())
     }
 
     private fun handleSpeechEnd() {
+        Toast.makeText(this, "Appel fun handleSpeechEnd", Toast.LENGTH_SHORT).show()
         // end audio session
         mUserInfoText!!.setText(R.string.detected_speech)
         mIsListening = false
@@ -96,12 +111,13 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Vous pouvez maintenant utiliser la commande vocale !", Toast.LENGTH_LONG).show()
             } else {
                 // audio permission denied
-                Toast.makeText(this, "Vous devez autoriser Velocus à accéder au micropour utiliser la commande vocale.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Vous devez autoriser Velocus à accéder au micro pour utiliser la commande vocale.", Toast.LENGTH_LONG).show()
             }
         }
     }
 
     private fun createSpeechRecognizer() {
+        Toast.makeText(this, "Appel fun createSpeechRecognizer", Toast.LENGTH_SHORT).show()
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
         mSpeechRecognizer?.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle) {}
@@ -113,10 +129,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onError(error: Int) {
+                Toast.makeText(this@MainActivity, "Error from createSpeechRecognizer", Toast.LENGTH_SHORT).show()
                 handleSpeechEnd()
             }
 
             override fun onResults(results: Bundle) {
+                Toast.makeText(this@MainActivity, "onResults from createSpeechRecognizer", Toast.LENGTH_SHORT).show()
                 // Called when recognition results are ready. This callback will be called when the
                 // audio session has been completed and user utterance has been parsed.
 
@@ -132,6 +150,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPartialResults(partialResults: Bundle) {
+                Toast.makeText(this@MainActivity, "onPartialResults from createSpeechRecognizer", Toast.LENGTH_SHORT).show()
                 // Called when partial recognition results are available, this callback will be
                 // called each time a partial text result is ready while the user is speaking.
                 val matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
@@ -142,15 +161,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onEvent(eventType: Int, params: Bundle) {}
+            override fun onEvent(eventType: Int, params: Bundle) {
+                Toast.makeText(this@MainActivity, "onEvent from createSpeechRecognizer", Toast.LENGTH_SHORT).show()
+            }
         })
     }
 
     private fun createIntent(): Intent {
+        Toast.makeText(this, "Appel fun createIntent", Toast.LENGTH_SHORT).show()
         val i = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         i.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-IN")
+        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "fr-FR")
         return i
     }
 
@@ -166,6 +188,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initCommands() {
         mCommandsList = ArrayList()
-        mCommandsList!!.add("Montre-moi où sont les vélos dispos")
+        mCommandsList!!.add("Bonjour")
+        //mCommandsList!!.add("Montre-moi où sont les vélos dispos")
     }
 }

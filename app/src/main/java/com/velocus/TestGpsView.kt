@@ -43,14 +43,13 @@ class TestGpsView : View, GestureDetector.OnGestureListener {
 
     fun postConstruct(){
 
-        val res = resources
+        //val res = resources
 
         // Récupération des valeurs des couleurs depuis le fichier color des ressources :
-        black = res.getColor(R.color.black)
-        red = res.getColor(R.color.red)
-        teal_200 = res.getColor(R.color.teal_200)
-        teal_700 = res.getColor(R.color.teal_700)
-
+        black = R.color.black
+        red = R.color.red
+        teal_200 = R.color.teal_200
+        teal_700 = R.color.teal_700
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -89,7 +88,7 @@ class TestGpsView : View, GestureDetector.OnGestureListener {
             canvas.drawText(this.orientation.toString(), (width/2).toFloat(), (height/2).toFloat()-f(60f), paint)
 
             // Affichage de l'angle magnétique par une lettre correspondant à l'orientation :
-            var direction : String = Orientaion_boussole(this.orientation)
+            var direction : String = orientaion_boussole(this.orientation)
             paint.setColor(red)
             canvas.drawText(direction, (width/2).toFloat(), (height/2).toFloat()-f(160f), paint)
         }
@@ -101,7 +100,7 @@ class TestGpsView : View, GestureDetector.OnGestureListener {
     }
 
     // Transformation de l'angle entre 0 et 360° en une indiquation d'orientation String :
-    fun Orientaion_boussole(num:Float): String {
+    fun orientaion_boussole(num:Float): String {
         return when(num){
             in 11.25f..33.75f->"NNE"
             in 33.75f..56.25f->"NE"

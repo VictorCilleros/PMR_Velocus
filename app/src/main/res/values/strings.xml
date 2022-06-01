@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Velocus</string>
-    <string name="listening" />
-    <string name="detected_speech" />
+    <string name="listening">Listening...</string>
+    <string name="detected_speech">No detected_speech yet.</string>
 </resources>
