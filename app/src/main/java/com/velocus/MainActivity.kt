@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     private var mStartButton: Button? = null
+    private var mCameraButton: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +21,15 @@ class MainActivity : AppCompatActivity() {
 
         mStartButton!!.setOnClickListener(View.OnClickListener {
             val MainActivityIntent = Intent(this@MainActivity, TestGpsActivity::class.java)
+            startActivity(MainActivityIntent)
+        })
+
+        // Bouton pour passer au test de la Caméra:
+
+        mCameraButton = findViewById<View>(R.id.camerabutton) as Button
+
+        mCameraButton!!.setOnClickListener(View.OnClickListener {
+            val MainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
             startActivity(MainActivityIntent)
         })
     }

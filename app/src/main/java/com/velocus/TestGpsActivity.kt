@@ -4,11 +4,12 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.velocus.View.TestGpsView
 import com.velocus.model.Gps
 
 class TestGpsActivity : AppCompatActivity() {
 
-    var testGpsView : TestGpsView? = null
+    lateinit var testGpsView : TestGpsView
 
     var gps : Gps? = null
 
@@ -18,10 +19,11 @@ class TestGpsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test_gps)
 
         // Initialisation de GameViewTestGps :
+        testGpsView = TestGpsView(this)
         testGpsView = findViewById(R.id.gameViewTestGps)
 
         // Initialisation du GPS :
-        gps = Gps(this)
+        gps = Gps(this,testGpsView)
         gps!!.checkLocation() // vérifiez si le service de localisation est activé ou non sur votre téléphone
     }
 
