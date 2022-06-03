@@ -20,7 +20,7 @@ class CameraActivity : AppCompatActivity() {
     private var mPreview: CameraPreview? = null
     private var myContext: Context? = null
     private var cameraPreview: LinearLayout? = null
-    private var cameraFront = false
+    //private var cameraFront = false
 
     lateinit var cameraView : CameraView
 
@@ -57,7 +57,6 @@ class CameraActivity : AppCompatActivity() {
         val p: Camera.Parameters = mCamera?.getParameters()!!
         thetaV = Math.toRadians(p.verticalViewAngle.toDouble())
         thetaH = Math.toRadians(p.horizontalViewAngle.toDouble())
-        Log.d("pato", "onCreate: $thetaV  ;  $thetaH")
 
         stations = MutableList<Station>(1){Station(50.62723799221388,3.109268199357267,"Mairie d'Hellemme",24,8) }
         stations!!.add(Station(50.619122956331886,3.1264709816213587,"Villeneuve-d'Ascq",27,22))
@@ -66,6 +65,7 @@ class CameraActivity : AppCompatActivity() {
         cameraView.a=this
     }
 
+    /*
     private fun findFrontFacingCamera(): Int {
         var cameraId = -1
         // Search for the front facing camera
@@ -98,7 +98,7 @@ class CameraActivity : AppCompatActivity() {
             }
         }
         return cameraId
-    }
+    }*/
 
     public override fun onResume() {
         super.onResume()
@@ -132,6 +132,7 @@ class CameraActivity : AppCompatActivity() {
         gps?.sensorManager?.unregisterListener(gps?.gyroListener)
     }
 
+    /*
     fun chooseCamera() {
         //if the camera preview is the front
         val cameraId = findFrontFacingCamera()
@@ -143,7 +144,7 @@ class CameraActivity : AppCompatActivity() {
             mCamera?.setDisplayOrientation(90)
             mPreview!!.refreshCamera(mCamera)
         }
-    }
+    }*/
 
     override fun onPause() {
         super.onPause()
