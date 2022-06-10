@@ -11,6 +11,7 @@ import android.view.Gravity
 import androidx.core.app.ActivityCompat
 import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
@@ -18,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
     private var mStartButton: Button? = null
 
-    private val RQ_SPEECH_REC = 102
     private val ASR_PERMISSION_REQUEST_CODE = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,18 +44,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        val tvText = findViewById<TextView>(R.id.tv_text)
-
-        if (requestCode == RQ_SPEECH_REC && resultCode == Activity.RESULT_OK) {
-            val result = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-            tvText.text = result?.get(0).toString()
-            handleCommands(result?.get(0).toString())
-        }
-    }
-
     private fun askSpeechInput() {
         if (!SpeechRecognizer.isRecognitionAvailable(this)) {
             Toast.makeText(this, "Speech recognition is not available", Toast.LENGTH_SHORT).show()
@@ -64,9 +52,22 @@ class MainActivity : AppCompatActivity() {
             i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
             i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say something!")
-            startActivityForResult(i, RQ_SPEECH_REC)
+            //startActivityForResult(i, RQ_SPEECH_REC)
+            getResult.launch(i)
         }
     }
+
+    private val getResult =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+            val tvText = findViewById<TextView>(R.id.tv_text)
+
+            if (it.resultCode == Activity.RESULT_OK) {
+                val result = it.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                tvText.text = result?.get(0).toString()
+                handleCommands(result?.get(0).toString())
+            }
+        }
 
     private fun verifyAudioPermissions() {
         if (checkCallingOrSelfPermission(RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
