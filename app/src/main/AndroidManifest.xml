@@ -19,9 +19,6 @@
         android:theme="@style/Theme.Velocus"
         tools:targetApi="31">
         <activity
-            android:name=".VocalActivity"
-            android:exported="false" />
-        <activity
             android:name=".TestGpsActivity"
             android:exported="false" />
         <activity
