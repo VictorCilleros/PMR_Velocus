@@ -52,8 +52,7 @@ class CameraActivity : AppCompatActivity() {
         // Initialisation du GPS :
         gps = Gps(this,cameraView)
         gps!!.checkLocation() // vérifiez si le service de localisation est activé ou non sur votre téléphone
-
-
+        
         val p: Camera.Parameters = mCamera?.getParameters()!!
         thetaV = Math.toRadians(p.verticalViewAngle.toDouble())
         thetaH = Math.toRadians(p.horizontalViewAngle.toDouble())
@@ -64,41 +63,6 @@ class CameraActivity : AppCompatActivity() {
 
         cameraView.a=this
     }
-
-    /*
-    private fun findFrontFacingCamera(): Int {
-        var cameraId = -1
-        // Search for the front facing camera
-        val numberOfCameras = Camera.getNumberOfCameras()
-        for (i in 0 until numberOfCameras) {
-            val info = Camera.CameraInfo()
-            Camera.getCameraInfo(i, info)
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                cameraId = i
-                cameraFront = true
-                break
-            }
-        }
-        return cameraId
-    }
-
-    private fun findBackFacingCamera(): Int {
-        var cameraId = -1
-        //Search for the back facing camera
-        //get the number of cameras
-        val numberOfCameras = Camera.getNumberOfCameras()
-        //for every camera check
-        for (i in 0 until numberOfCameras) {
-            val info = Camera.CameraInfo()
-            Camera.getCameraInfo(i, info)
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                cameraId = i
-                cameraFront = false
-                break
-            }
-        }
-        return cameraId
-    }*/
 
     public override fun onResume() {
         super.onResume()
@@ -131,20 +95,6 @@ class CameraActivity : AppCompatActivity() {
         // Déinscription de tout les capteurs, de l'attribut "gyroListener" :
         gps?.sensorManager?.unregisterListener(gps?.gyroListener)
     }
-
-    /*
-    fun chooseCamera() {
-        //if the camera preview is the front
-        val cameraId = findFrontFacingCamera()
-        if (cameraId >= 0) {
-            //open the backFacingCamera
-            //set a picture callback
-            //refresh the preview
-            mCamera = Camera.open(cameraId)
-            mCamera?.setDisplayOrientation(90)
-            mPreview!!.refreshCamera(mCamera)
-        }
-    }*/
 
     override fun onPause() {
         super.onPause()
