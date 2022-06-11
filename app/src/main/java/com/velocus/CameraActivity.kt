@@ -11,6 +11,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.velocus.BaseDeDonnee.DatabaseManager
 import com.velocus.View.CameraView
 import com.velocus.model.Gps
 import com.velocus.model.Station
@@ -30,6 +31,8 @@ class CameraActivity : AppCompatActivity() {
 
     var thetaH : Double=0.0
     var thetaV : Double=0.0
+
+    lateinit var databaseManager : DatabaseManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +59,14 @@ class CameraActivity : AppCompatActivity() {
         val p: Camera.Parameters = mCamera?.getParameters()!!
         thetaV = Math.toRadians(p.verticalViewAngle.toDouble())
         thetaH = Math.toRadians(p.horizontalViewAngle.toDouble())
+
+        databaseManager = DatabaseManager(this)
+
+        if (databaseManager.nb_stations()==0){
+            // appelle de l'API pour récupérer toutes les infos de toutes les stations
+        }
+
+        // stations = databaseManager.genrerate_stations()
 
         stations = MutableList<Station>(1){Station(50.62723799221388,3.109268199357267,"Mairie d'Hellemme",24,8) }
         stations!!.add(Station(50.619122956331886,3.1264709816213587,"Villeneuve-d'Ascq",27,22))
