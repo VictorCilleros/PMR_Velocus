@@ -24,6 +24,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.velocus.TestGpsActivity
 import com.velocus.View.SuperView
+import java.lang.Math.abs
 
 /**
  * Created by 2poiz' on 20/05/2022
@@ -75,8 +76,18 @@ class Gps( var activity_ : Activity, var superView : SuperView) : GoogleApiClien
                     mRotation[1] = (Math.toDegrees(mRotation[1].toDouble()).toFloat()+360)%360
                     mRotation[2] = (Math.toDegrees(mRotation[2].toDouble()).toFloat()+360)%360
 
-                    superView?.orientation = mRotation[0] // Récupération de l'orientation magnétique
-                    superView?.invalidate() // Actualisation de l'affichage
+                    // Moyenne glissante (on ne considère le changement d'orientation que si cette dernière est significative) :
+                    if (abs(superView?.orientation - mRotation[0])>=330){ // Cas ou on passe entre 0 et 360
+                        if (abs(superView?.orientation - abs(mRotation[0]-359))>=3){
+                            superView?.orientation = mRotation[0] // Récupération de l'orientation magnétique
+                            superView?.invalidate() // Actualisation de l'affichage
+                        }
+                    }else{
+                        if (abs(superView?.orientation - mRotation[0])>=3){
+                            superView?.orientation = mRotation[0] // Récupération de l'orientation magnétique
+                            superView?.invalidate() // Actualisation de l'affichage
+                        }
+                    }
                 }
             }
         }
@@ -153,9 +164,15 @@ class Gps( var activity_ : Activity, var superView : SuperView) : GoogleApiClien
                 location?.let { java.lang.Double.toString(it.latitude) } + "," +
                 location?.let { java.lang.Double.toString(it.longitude) }
         if (location != null) {
-            superView?.mLatitudeTextView = location.latitude // Récupération de la latitude
-            superView?.mLongitudeTextView = location.longitude // Récupération de la longitude
-            superView?.invalidate() // Actualisation de l'affichage
+            // Moyenne glissante (on ne considère le changement d'orientation que si cette dernière est significative) :
+            if (abs((superView?.mLatitudeTextView*10000).toInt() - (location.latitude*10000).toInt())>=2){
+                superView?.mLatitudeTextView = location.latitude // Récupération de la latitude
+                superView?.invalidate() // Actualisation de l'affichage
+            }
+            if (abs((superView?.mLongitudeTextView*10000).toInt() - (location.longitude*10000).toInt())>=2){
+                superView?.mLongitudeTextView = location.longitude // Récupération de la longitude
+                superView?.invalidate() // Actualisation de l'affichage
+            }
         }
         //Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }

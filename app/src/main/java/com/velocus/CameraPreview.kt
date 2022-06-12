@@ -10,6 +10,8 @@ import java.io.IOException
 
 class CameraPreview(context: Context?, private var mCamera: Camera?) : SurfaceView(context), SurfaceHolder.Callback {
 
+    // Class permettant de récupérer le flux vidéo de la caméra
+
     private val mHolder: SurfaceHolder
 
     override fun surfaceCreated(holder: SurfaceHolder) {

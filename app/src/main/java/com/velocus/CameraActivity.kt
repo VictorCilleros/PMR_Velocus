@@ -17,11 +17,11 @@ import com.velocus.model.Gps
 import com.velocus.model.Station
 
 class CameraActivity : AppCompatActivity() {
+
     private var mCamera: Camera? = null
     private var mPreview: CameraPreview? = null
     private var myContext: Context? = null
     private var cameraPreview: LinearLayout? = null
-    //private var cameraFront = false
 
     lateinit var cameraView : CameraView
 
@@ -86,6 +86,8 @@ class CameraActivity : AppCompatActivity() {
             Log.d("nu", "no null")
         }
 
+        gps?.sensorManager!!.registerListener(gps?.gyroListener, gps?.sensorManager!!.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME)
+        gps?.sensorManager!!.registerListener(gps?.gyroListener, gps?.sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME)
         gps?.sensorManager!!.registerListener(gps?.gyroListener, gps?.sensorManager!!.getDefaultSensor( Sensor.TYPE_ROTATION_VECTOR ), SensorManager.SENSOR_DELAY_GAME)
     }
 

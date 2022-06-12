@@ -16,6 +16,8 @@ import com.velocus.R
  */
 abstract class SuperView: View, GestureDetector.OnGestureListener {
 
+    // Class abtraite permettant de gérer les méthodes et atributs des instances étendu de View :
+
     // Couleur :
     var red: Int=0
     var black: Int=0
