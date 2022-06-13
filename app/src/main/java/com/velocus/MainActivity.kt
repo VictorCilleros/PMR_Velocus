@@ -34,6 +34,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(mainActivityIntent)
         })
 
+        // Bouton pour passer au test de la Caméra:
+
+        mCameraButton = findViewById<View>(R.id.camerabutton) as Button
+
+        mCameraButton!!.setOnClickListener(View.OnClickListener {
+            val mainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
+            startActivity(mainActivityIntent)
+        })
+
         verifyAudioPermissions()
 
         val btnMicro = findViewById<ImageButton>(R.id.btn_micro)
@@ -82,7 +91,8 @@ class MainActivity : AppCompatActivity() {
     private fun handleCommands(vocal: String) {
         if (vocal.lowercase() == "démarrer") {
             Toast.makeText(this, "Et l'affichage démarre !", Toast.LENGTH_SHORT).show()
-            // TODO implémenter l'affichage
+            val mainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
+            startActivity(mainActivityIntent)
         }
         else if (vocal.lowercase() == "arrêter") {
             Toast.makeText(this, "Et puis l'affichage s'arrête !", Toast.LENGTH_SHORT).show()
@@ -90,13 +100,5 @@ class MainActivity : AppCompatActivity() {
         }
         else {Toast.makeText(this, "Désolé, je ne comprends pas cette commande", Toast.LENGTH_SHORT).show()}
 
-        // Bouton pour passer au test de la Caméra:
-
-        mCameraButton = findViewById<View>(R.id.camerabutton) as Button
-
-        mCameraButton!!.setOnClickListener(View.OnClickListener {
-            val mainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
-            startActivity(mainActivityIntent)
-        })
     }
 }

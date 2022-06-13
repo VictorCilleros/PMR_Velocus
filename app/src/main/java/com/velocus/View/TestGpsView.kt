@@ -22,11 +22,10 @@ class TestGpsView : SuperView {
     }
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs){
-<<<<<<< HEAD:app/src/main/java/com/velocus/TestGpsView.kt
-        postConstruct()
+        //postConstruct()
     }
 
-    fun postConstruct(){
+    override fun postConstruct(){
 
         //val res = resources
 
@@ -35,9 +34,8 @@ class TestGpsView : SuperView {
         red = R.color.red
         teal_200 = R.color.teal_200
         teal_700 = R.color.teal_700
-=======
+
         //postConstruct()
->>>>>>> aa432ec38b019c9bf4046a5284b3e6b3a0f158ec:app/src/main/java/com/velocus/View/TestGpsView.kt
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -78,7 +76,6 @@ class TestGpsView : SuperView {
             // Affichage de l'angle magnétique par une lettre correspondant à l'orientation :
             var direction : String = orientaion_boussole(this.orientation)
             paint.setColor(red)
-<<<<<<< HEAD:app/src/main/java/com/velocus/TestGpsView.kt
             canvas.drawText(direction, (width/2).toFloat(), (height/2).toFloat()-f(160f), paint)
         }
     }
@@ -107,9 +104,6 @@ class TestGpsView : SuperView {
             in 303.75f..326.25f->"NO"
             in 326.25f..348.75f->"NNO"
             else -> "N"
-=======
-            canvas.drawText(direction, (width/2).toFloat(), (height/2).toFloat()-f(160), paint)
->>>>>>> aa432ec38b019c9bf4046a5284b3e6b3a0f158ec:app/src/main/java/com/velocus/View/TestGpsView.kt
         }
     }
 
