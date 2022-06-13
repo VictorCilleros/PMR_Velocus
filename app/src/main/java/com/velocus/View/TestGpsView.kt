@@ -22,7 +22,22 @@ class TestGpsView : SuperView {
     }
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs){
+<<<<<<< HEAD:app/src/main/java/com/velocus/TestGpsView.kt
+        postConstruct()
+    }
+
+    fun postConstruct(){
+
+        //val res = resources
+
+        // Récupération des valeurs des couleurs depuis le fichier color des ressources :
+        black = R.color.black
+        red = R.color.red
+        teal_200 = R.color.teal_200
+        teal_700 = R.color.teal_700
+=======
         //postConstruct()
+>>>>>>> aa432ec38b019c9bf4046a5284b3e6b3a0f158ec:app/src/main/java/com/velocus/View/TestGpsView.kt
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -61,9 +76,40 @@ class TestGpsView : SuperView {
             canvas.drawText(this.orientation.toString(), (width/2).toFloat(), (height/2).toFloat()-f(60), paint)
 
             // Affichage de l'angle magnétique par une lettre correspondant à l'orientation :
-            var direction : String = Orientaion_boussole(this.orientation)
+            var direction : String = orientaion_boussole(this.orientation)
             paint.setColor(red)
+<<<<<<< HEAD:app/src/main/java/com/velocus/TestGpsView.kt
+            canvas.drawText(direction, (width/2).toFloat(), (height/2).toFloat()-f(160f), paint)
+        }
+    }
+
+    // Fonction pour remettre à l'echelle la position des texts selon la bonne position déterminé sur un appareil de taille 1080f :
+    fun f(x: Float): Float {
+        return width * x / 1080f
+    }
+
+    // Transformation de l'angle entre 0 et 360° en une indiquation d'orientation String :
+    fun orientaion_boussole(num:Float): String {
+        return when(num){
+            in 11.25f..33.75f->"NNE"
+            in 33.75f..56.25f->"NE"
+            in 56.25f..78.75f->"ENE"
+            in 78.75f..101.25f->"E"
+            in 101.25f..123.75f->"ESE"
+            in 123.75f..146.25f->"SE"
+            in 146.25f..168.25f->"SSE"
+            in 168.25f..191.25f->"S"
+            in 191.25f..213.75f->"SSO"
+            in 213.75f..236.25f->"SO"
+            in 236.25f..258.75f->"OSO"
+            in 258.75f..281.25f->"O"
+            in 281.25f..303.75f->"ONO"
+            in 303.75f..326.25f->"NO"
+            in 326.25f..348.75f->"NNO"
+            else -> "N"
+=======
             canvas.drawText(direction, (width/2).toFloat(), (height/2).toFloat()-f(160), paint)
+>>>>>>> aa432ec38b019c9bf4046a5284b3e6b3a0f158ec:app/src/main/java/com/velocus/View/TestGpsView.kt
         }
     }
 
