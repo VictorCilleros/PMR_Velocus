@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import android.view.Gravity
 import androidx.core.app.ActivityCompat
 import android.view.View
 import android.widget.*
@@ -18,6 +17,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private var mStartButton: Button? = null
+    private var mCameraButton: Button? = null
 
     private val ASR_PERMISSION_REQUEST_CODE = 0
 
@@ -89,5 +89,14 @@ class MainActivity : AppCompatActivity() {
             // TODO arrêter l'affichage
         }
         else {Toast.makeText(this, "Désolé, je ne comprends pas cette commande", Toast.LENGTH_SHORT).show()}
+
+        // Bouton pour passer au test de la Caméra:
+
+        mCameraButton = findViewById<View>(R.id.camerabutton) as Button
+
+        mCameraButton!!.setOnClickListener(View.OnClickListener {
+            val mainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
+            startActivity(mainActivityIntent)
+        })
     }
 }

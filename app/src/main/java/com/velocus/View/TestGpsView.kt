@@ -1,4 +1,4 @@
-package com.velocus
+package com.velocus.View
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,38 +6,23 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.view.GestureDetector
 import android.view.MotionEvent
-import android.view.View
+import com.velocus.R
 
 /**
  * Created by 2poiz' on 18/05/2022
  */
-class TestGpsView : View, GestureDetector.OnGestureListener {
-
-    // Couleur :
-    private var red: Int=0
-    private var black: Int=0
-    private var teal_700: Int=0
-    private var teal_200: Int=0
-
-    //private val gestureDetector: GestureDetector? = null
-
-    var paint = Paint(Paint.ANTI_ALIAS_FLAG)
-
-    // Attribues permettant l'affichae :
-    var mLatitudeTextView: String ="" //Lattitude
-    var mLongitudeTextView: String ="" //Longitude
-    var orientation : Float = 0F //Angle magnétique entre 0 et 360°
+class TestGpsView : SuperView {
 
     // Récupération du png pour l'image de fond d'écran :
     var imgFond: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.png)
 
     constructor(context: Context?) : super(context) {
-        postConstruct()
+        //postConstruct()
     }
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs){
+<<<<<<< HEAD:app/src/main/java/com/velocus/TestGpsView.kt
         postConstruct()
     }
 
@@ -50,6 +35,9 @@ class TestGpsView : View, GestureDetector.OnGestureListener {
         red = R.color.red
         teal_200 = R.color.teal_200
         teal_700 = R.color.teal_700
+=======
+        //postConstruct()
+>>>>>>> aa432ec38b019c9bf4046a5284b3e6b3a0f158ec:app/src/main/java/com/velocus/View/TestGpsView.kt
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -84,12 +72,13 @@ class TestGpsView : View, GestureDetector.OnGestureListener {
 
             // Affichage de la lattitude, longitude et l'angle magnétique :
             canvas.drawText("Latitude = "+this.mLatitudeTextView, (width/2).toFloat(), (height/7).toFloat(), paint)
-            canvas.drawText("Longitude = "+this.mLongitudeTextView, (width/2).toFloat(), (height/7).toFloat()+f(100f), paint)
-            canvas.drawText(this.orientation.toString(), (width/2).toFloat(), (height/2).toFloat()-f(60f), paint)
+            canvas.drawText("Longitude = "+this.mLongitudeTextView, (width/2).toFloat(), (height/7).toFloat()+f(100), paint)
+            canvas.drawText(this.orientation.toString(), (width/2).toFloat(), (height/2).toFloat()-f(60), paint)
 
             // Affichage de l'angle magnétique par une lettre correspondant à l'orientation :
             var direction : String = orientaion_boussole(this.orientation)
             paint.setColor(red)
+<<<<<<< HEAD:app/src/main/java/com/velocus/TestGpsView.kt
             canvas.drawText(direction, (width/2).toFloat(), (height/2).toFloat()-f(160f), paint)
         }
     }
@@ -118,6 +107,9 @@ class TestGpsView : View, GestureDetector.OnGestureListener {
             in 303.75f..326.25f->"NO"
             in 326.25f..348.75f->"NNO"
             else -> "N"
+=======
+            canvas.drawText(direction, (width/2).toFloat(), (height/2).toFloat()-f(160), paint)
+>>>>>>> aa432ec38b019c9bf4046a5284b3e6b3a0f158ec:app/src/main/java/com/velocus/View/TestGpsView.kt
         }
     }
 
