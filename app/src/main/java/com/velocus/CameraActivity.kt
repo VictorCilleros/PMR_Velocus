@@ -222,7 +222,25 @@ class CameraActivity : AppCompatActivity() {
                 var code = ""
                 val site = URL(url)
                 var buff = BufferedReader(InputStreamReader(site.openStream()))
-                Log.d("patate", buff.readLines().toString())
+                for (i in 0..942){
+                    buff.readLine()
+                }
+
+
+                for (i in 0..225){
+                    var ligne1 = buff.readLine()
+                    var nb =
+                    var ligne2 = buff.readLine()
+                    buff.readLine()
+                    buff.readLine()
+                    buff.readLine()
+                    buff.readLine()
+                    buff.readLine()
+                    buff.readLine()
+
+                    stations.add(Station(nb,))
+                }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
