@@ -39,13 +39,22 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
         return cur.getInt(0)
     }
 
-    fun insert_station(latitude : Double, longitude : Double, nom : String, nb_place_tot : Int, nb_place_dispo : Int) { // Insertion d'une nouvelle station
+    fun is_in_stations(nom_station: kotlin.String): Boolean{// Fonction retournant si une station dans la base de donnée possède bien ce nom
+        var nom_ = nom_station.replace("'","''")
+        val cur = this.writableDatabase.rawQuery("Select COUNT(*) FROM Station Where nom = '$nom_' COLLATE NOCASE", null)
+        cur.moveToFirst()
+        return cur.getInt(0)!=0
+    }
+
+    fun insert_station(station : Station) { // Insertion d'une nouvelle station
+        var nom_ = station.nom.replace("'","''")
+
         val strSql = "insert into Station (latitude,longitude,nom,nb_place_tot,nb_place_dispo) values (" +
-                    " $latitude ," +
-                    " $longitude ," +
-                    " $nom ," +
-                    " $nb_place_tot ," +
-                    " $nb_place_dispo )"
+                    " $station.latitude ," +
+                    " $station.longitude ," +
+                    " '$nom_' ," +
+                    " $station.nb_place_tot ," +
+                    " $station.nb_place_dispo )"
         this.writableDatabase.execSQL(strSql)
     }
 

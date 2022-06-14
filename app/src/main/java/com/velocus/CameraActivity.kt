@@ -76,15 +76,17 @@ class CameraActivity : AppCompatActivity() {
 
         databaseManager = DatabaseManager(this)
 
+        stations = MutableList<Station>(1){Station(50.62723799221388,3.109268199357267,"Mairie d'Hellemmes",24,8) }
+        stations!!.add(Station(50.619122956331886,3.1264709816213587,"Villeneuve-d'Ascq",27,22))
+        stations!!.add(Station(50.63701166075154,3.0707240415241044,"Gare Lille Flandres",19,0))
+
         if (databaseManager.nb_stations()==0){
-            // appelle de l'API pour récupérer toutes les infos de toutes les stations
+            for (i in 0..2){
+                databaseManager.insert_station(stations!![i])
+            }
         }
 
         // stations = databaseManager.genrerate_stations()
-
-        stations = MutableList<Station>(1){Station(50.62723799221388,3.109268199357267,"Mairie d'Hellemme",24,8) }
-        stations!!.add(Station(50.619122956331886,3.1264709816213587,"Villeneuve-d'Ascq",27,22))
-        stations!!.add(Station(50.63701166075154,3.0707240415241044,"Gare Lille Flandres",19,0))
 
         cameraView.a=this
 
@@ -167,7 +169,7 @@ class CameraActivity : AppCompatActivity() {
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
-            val tvText = findViewById<TextView>(R.id.tv_text)
+            val tvText = findViewById<TextView>(R.id.tv_text_cam)
 
             if (it.resultCode == Activity.RESULT_OK) {
                 val result = it.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
@@ -187,16 +189,24 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun handleCommands(vocal: String) {
-        if (vocal.lowercase() == "démarrer") {
-            Toast.makeText(this, "Et l'affichage démarre !", Toast.LENGTH_SHORT).show()
-        }
-        else if (vocal.lowercase() == "arrêter") {
+        if (vocal.lowercase() == "arrêter") {
             Toast.makeText(this, "Et puis l'affichage s'arrête !", Toast.LENGTH_SHORT).show()
-            val mainActivityIntent = Intent(this@CameraActivity, MainActivity::class.java)
-            startActivity(mainActivityIntent)
-        }
-        else {
-            Toast.makeText(this, "Désolé, je ne comprends pas cette commande", Toast.LENGTH_SHORT).show()}
 
+            this.finish()
+        } else {
+            var compt = 0
+            for (i in this.stations!!) {
+                if (i.nom.equals(vocal.lowercase(), true)) {
+                    Toast.makeText(this, "Mode station unique activé !", Toast.LENGTH_SHORT).show()
+                    compt = 1
+                    this.cameraView.nom_station_select = i.nom
+                    this.cameraView.nb_station_affichage = 1
+                    cameraView.invalidate()
+                }
+            }
+            if (compt == 0) {
+                Toast.makeText(this, "Désolé, je ne comprends pas cette commande : ${vocal.lowercase()}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

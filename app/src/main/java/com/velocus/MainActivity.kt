@@ -1,5 +1,6 @@
 package com.velocus
 
+import android.Manifest
 import android.Manifest.permission.RECORD_AUDIO
 import android.app.Activity
 import android.content.Intent
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         mCameraButton = findViewById<View>(R.id.camerabutton) as Button
 
         mCameraButton!!.setOnClickListener(View.OnClickListener {
+            verifyCameraPermissions()
             val mainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
             startActivity(mainActivityIntent)
         })
@@ -88,9 +90,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun verifyCameraPermissions() {
+        if (checkCallingOrSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                ASR_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
     private fun handleCommands(vocal: String) {
         if (vocal.lowercase() == "démarrer") {
             Toast.makeText(this, "Et l'affichage démarre !", Toast.LENGTH_SHORT).show()
+
             val mainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
             startActivity(mainActivityIntent)
         }
