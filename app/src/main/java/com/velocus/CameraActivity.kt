@@ -44,7 +44,7 @@ class CameraActivity : AppCompatActivity() {
 
     var gps : Gps? = null
 
-    var stations : MutableList<Station>? = null
+    var stations : MutableList<Station> = MutableList<Station>(0){index -> Station(0,0.0,0.0,"",0,0)}
 
     var thetaH : Double=0.0
     var thetaV : Double=0.0
@@ -79,18 +79,20 @@ class CameraActivity : AppCompatActivity() {
 
         databaseManager = DatabaseManager(this)
 
+        /*
         stations = MutableList<Station>(1){Station(0,50.62723799221388,3.109268199357267,"Mairie d'Hellemmes",24,8) }
         stations!!.add(Station(1,50.619122956331886,3.1264709816213587,"Villeneuve-d'Ascq",27,22))
-        stations!!.add(Station(2,50.63701166075154,3.0707240415241044,"Gare Lille Flandres",19,0))
+        stations!!.add(Station(2,50.63701166075154,3.0707240415241044,"Gare Lille Flandres",19,0))*/
 
         if (databaseManager.nb_stations()==0){
             getCode("https://www.ilevia.fr/cms/institutionnel/velo/stations-vlille/")
-            for (i in 0..2){
+            /*
+            for (i in 1..225){
                 databaseManager.insert_station(stations!![i])
-            }
+            }*/
+        }else{
+            stations = databaseManager.genrerate_stations()!!
         }
-
-        // stations = databaseManager.genrerate_stations()
 
         cameraView.a=this
 
@@ -102,7 +104,6 @@ class CameraActivity : AppCompatActivity() {
             askSpeechInput()
         }
 
-        getCode("https://www.ilevia.fr/cms/institutionnel/velo/stations-vlille/")
     }
 
     public override fun onResume() {
@@ -222,23 +223,43 @@ class CameraActivity : AppCompatActivity() {
                 var code = ""
                 val site = URL(url)
                 var buff = BufferedReader(InputStreamReader(site.openStream()))
-                for (i in 0..942){
+                for (i in 1..942){
                     buff.readLine()
                 }
 
 
-                for (i in 0..225){
-                    var ligne1 = buff.readLine()
-                    var nb =
+                for (i in 1..225){
+                    buff.readLine()
                     var ligne2 = buff.readLine()
+                    var nb = ligne2.slice(22 until (ligne2.indexOf("</td>"))).toInt()
+
+                    var ligne3 = buff.readLine()
+                    var nom = ligne3.slice(18 until (ligne3.indexOf("</td>")))
+
                     buff.readLine()
                     buff.readLine()
                     buff.readLine()
+                    
+                    var ligne7 = buff.readLine()
+                    var nb_velo_dispo = ligne7.slice(33 until (ligne7.indexOf("</span>"))).toInt()
+                    
+                    var ligne8 = buff.readLine()
+                    var nb_place_dispo = ligne8.slice(34 until (ligne8.indexOf("</span>"))).toInt()
+
                     buff.readLine()
+
+                    var ligne10  = buff.readLine()
+                    var lon = ligne10.slice(35 until (ligne10.indexOf("data-latitude")-2)).toDouble()
+                    var lat = ligne10.slice((ligne10.indexOf("data-latitude")+15) until (ligne10.indexOf("><span")-1)).toDouble()
+
                     buff.readLine()
                     buff.readLine()
 
-                    stations.add(Station(nb,))
+                    stations.add(Station(nb,lat,lon,nom,nb_velo_dispo+nb_place_dispo,nb_place_dispo))
+                }
+
+                for (i in 0 until stations!!.size){
+                    Log.d("patate", stations!![i].toString())
                 }
 
             } catch (e: Exception) {

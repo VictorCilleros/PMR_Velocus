@@ -3,6 +3,7 @@ package com.velocus.View
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import com.velocus.CameraActivity
 import com.velocus.R
@@ -19,7 +20,7 @@ class CameraView : SuperView {
     var imgCursor: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.pointeur) // Récupération de l'image du pointeur
 
     // Attribut permettant de gérer les différents mode d'affichage :
-    var nb_station_affichage : Int = 3
+    var nb_station_affichage : Int = 6
     // Si nb_station_affichage == 0 : Mode radius avec distance_search
     // Si nb_station_affichage == 1 et nom_station_select == un nom de station : Mode station unique (affiche uniquement la station enrefgistrer nom_station_select)
     // Sinon affiche les nb_station_affichage les plus proche
@@ -103,12 +104,12 @@ class CameraView : SuperView {
 
                     for (i in 0 until nb_station_affichage){
                         if (list_distance_station_plus_proche[i]!=1000000000){
-                            var teta__ =angle_vecteur(this.mLatitudeTextView,this.mLongitudeTextView, this.a?.stations!![i].latitude, this.a?.stations!![i].longitude)
+                            var teta__ =angle_vecteur(this.mLatitudeTextView,this.mLongitudeTextView, this.a?.stations!![list_indice_station_plus_proche[i]].latitude, this.a?.stations!![list_indice_station_plus_proche[i]].longitude)
                             if (teta__ > orientation_rad-(a!!.thetaH)/2 && teta__ < orientation_rad+(a!!.thetaH)/2){
 
                                 var x =width*(((teta__-orientation_rad+(a!!.thetaH)/2)/ a!!.thetaH).toFloat())
 
-                                Draw_station(a!!.stations?.get(i)!!, canvas, x)
+                                Draw_station(a!!.stations?.get(list_indice_station_plus_proche[i])!!, canvas, x)
                             }
                         }
                     }

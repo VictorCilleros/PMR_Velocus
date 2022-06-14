@@ -10,7 +10,7 @@ import java.lang.String
 /**
  * Created by 2poiz' on 11/06/2022
  */
-class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.db", null, 1){
+class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.db", null, 2){
 
     // Base de donnée pour stocker dans la mémoir morte toutes les caractéristiques de toutes les stations :
 
