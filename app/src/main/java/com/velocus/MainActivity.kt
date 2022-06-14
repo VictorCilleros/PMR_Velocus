@@ -1,6 +1,7 @@
 package com.velocus
 
 import android.Manifest
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.RECORD_AUDIO
 import android.app.Activity
 import android.content.Intent
@@ -40,10 +41,11 @@ class MainActivity : AppCompatActivity() {
         mCameraButton = findViewById<View>(R.id.camerabutton) as Button
 
         mCameraButton!!.setOnClickListener(View.OnClickListener {
-            verifyCameraPermissions()
             val mainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
             startActivity(mainActivityIntent)
         })
+
+        verifyCameraPermissions()
 
         verifyAudioPermissions()
 
@@ -81,10 +83,10 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun verifyAudioPermissions() {
-        if (checkCallingOrSelfPermission(RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        if (checkCallingOrSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(RECORD_AUDIO),
+                arrayOf(Manifest.permission.RECORD_AUDIO),
                 ASR_PERMISSION_REQUEST_CODE
             )
         }

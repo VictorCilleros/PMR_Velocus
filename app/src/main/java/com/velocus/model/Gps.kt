@@ -1,9 +1,11 @@
 package com.velocus.model
 
 import android.Manifest
+import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Sensor
@@ -22,9 +24,9 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.velocus.TestGpsActivity
 import com.velocus.View.SuperView
 import java.lang.Math.abs
+
 
 /**
  * Created by 2poiz' on 20/05/2022
@@ -95,14 +97,46 @@ class Gps( var activity_ : Activity, var superView : SuperView) : GoogleApiClien
 
     override fun onConnected(p0: Bundle?) {
         if (ActivityCompat.checkSelfPermission(activity_, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity_, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+            // : Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            return
+
+            // Should we show an explanation?
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this.activity_,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                AlertDialog.Builder(this.activity_)
+                    .setTitle("Demande d'accès à la localisation :")
+                    .setMessage("L'application nécessite l'accès à la localisation")
+                    .setPositiveButton(R.string.ok,
+                        DialogInterface.OnClickListener { dialogInterface, i -> //Prompt the user once explanation has been shown
+                            ActivityCompat.requestPermissions(
+                                this.activity_,
+                                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                                99
+                            )
+                        })
+                    .create()
+                    .show()
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    this.activity_, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    99
+                )
+            }
         }
 
         // initialisation des parramètre de localisation :
