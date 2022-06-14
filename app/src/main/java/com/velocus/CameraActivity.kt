@@ -1,20 +1,32 @@
 package com.velocus
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.hardware.Camera
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.velocus.BaseDeDonnee.DatabaseManager
 import com.velocus.View.CameraView
 import com.velocus.model.Gps
 import com.velocus.model.Station
+import java.util.*
 
 class CameraActivity : AppCompatActivity() {
 
@@ -22,6 +34,8 @@ class CameraActivity : AppCompatActivity() {
     private var mPreview: CameraPreview? = null
     private var myContext: Context? = null
     private var cameraPreview: LinearLayout? = null
+
+    private val ASR_PERMISSION_REQUEST_CODE = 0
 
     lateinit var cameraView : CameraView
 
@@ -73,6 +87,14 @@ class CameraActivity : AppCompatActivity() {
         stations!!.add(Station(50.63701166075154,3.0707240415241044,"Gare Lille Flandres",19,0))
 
         cameraView.a=this
+
+        verifyAudioPermissions()
+
+        val btnMicro = findViewById<ImageButton>(R.id.btn_micro)
+
+        btnMicro.setOnClickListener {
+            askSpeechInput()
+        }
     }
 
     public override fun onResume() {
@@ -127,5 +149,54 @@ class CameraActivity : AppCompatActivity() {
 
     companion object {
         var bitmap: Bitmap? = null
+    }
+
+    private fun askSpeechInput() {
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            Toast.makeText(this, "Speech recognition is not available", Toast.LENGTH_SHORT).show()
+        } else {
+            val i = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+            i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say something!")
+            //startActivityForResult(i, RQ_SPEECH_REC)
+            getResult.launch(i)
+        }
+    }
+
+    private val getResult =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+            val tvText = findViewById<TextView>(R.id.tv_text)
+
+            if (it.resultCode == Activity.RESULT_OK) {
+                val result = it.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                tvText.text = result?.get(0).toString()
+                handleCommands(result?.get(0).toString())
+            }
+        }
+
+    private fun verifyAudioPermissions() {
+        if (checkCallingOrSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.RECORD_AUDIO),
+                ASR_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    private fun handleCommands(vocal: String) {
+        if (vocal.lowercase() == "démarrer") {
+            Toast.makeText(this, "Et l'affichage démarre !", Toast.LENGTH_SHORT).show()
+        }
+        else if (vocal.lowercase() == "arrêter") {
+            Toast.makeText(this, "Et puis l'affichage s'arrête !", Toast.LENGTH_SHORT).show()
+            val mainActivityIntent = Intent(this@CameraActivity, MainActivity::class.java)
+            startActivity(mainActivityIntent)
+        }
+        else {
+            Toast.makeText(this, "Désolé, je ne comprends pas cette commande", Toast.LENGTH_SHORT).show()}
+
     }
 }
