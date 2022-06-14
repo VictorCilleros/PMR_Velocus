@@ -28,6 +28,7 @@ import com.velocus.model.Gps
 import com.velocus.model.Station
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.lang.Thread.sleep
 import java.net.URL
 import java.util.*
 
@@ -103,6 +104,8 @@ class CameraActivity : AppCompatActivity() {
         btnMicroCam.setOnClickListener {
             askSpeechInput()
         }
+
+        actualisation("https://www.ilevia.fr/cms/institutionnel/velo/stations-vlille/")
 
     }
 
@@ -211,6 +214,15 @@ class CameraActivity : AppCompatActivity() {
                     cameraView.invalidate()
                 }
             }
+
+            if (vocal.lowercase().matches(Regex("[+-]?\\d*(\\.\\d+)?"))){
+                compt = 1
+                Toast.makeText(this, "Mode ${vocal.lowercase().toInt()} stations activé !", Toast.LENGTH_SHORT).show()
+                this.cameraView.nb_station_affichage=vocal.lowercase().toInt()
+                this.cameraView.nom_station_select = ""
+                cameraView.invalidate()
+            }
+
             if (compt == 0) {
                 Toast.makeText(this, "Désolé, je ne comprends pas cette commande : ${vocal.lowercase()}", Toast.LENGTH_SHORT).show()
             }
@@ -220,7 +232,6 @@ class CameraActivity : AppCompatActivity() {
     fun getCode(url: String?) {
         var thread = Thread {
             try {
-                var code = ""
                 val site = URL(url)
                 var buff = BufferedReader(InputStreamReader(site.openStream()))
                 for (i in 1..942){
@@ -258,15 +269,62 @@ class CameraActivity : AppCompatActivity() {
                     stations.add(Station(nb,lat,lon,nom,nb_velo_dispo+nb_place_dispo,nb_place_dispo))
                 }
 
-                for (i in 0 until stations!!.size){
-                    Log.d("patate", stations!![i].toString())
-                }
-
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
 
+        thread.start()
+    }
+
+    fun actualisation(url: String?) {
+        var thread = Thread {
+            try {
+                fun action(){
+                    val site = URL(url)
+                    var buff = BufferedReader(InputStreamReader(site.openStream()))
+                    for (i in 1..942){
+                        buff.readLine()
+                    }
+
+
+                    for (i in 1..225){
+                        buff.readLine()
+                        var ligne2 = buff.readLine()
+                        var nb = ligne2.slice(22 until (ligne2.indexOf("</td>"))).toInt()
+
+                        buff.readLine()
+                        buff.readLine()
+                        buff.readLine()
+                        buff.readLine()
+                        buff.readLine()
+
+                        var ligne8 = buff.readLine()
+                        var nb_place_dispo = ligne8.slice(34 until (ligne8.indexOf("</span>"))).toInt()
+
+                        buff.readLine()
+                        buff.readLine()
+                        buff.readLine()
+                        buff.readLine()
+
+                        for (i in 0  until stations.size){
+                            if (stations[i].numero==nb){
+                                stations[i].nb_place_dispo= nb_place_dispo
+                            }
+                        }
+                    }
+                    sleep(60000)
+                    //Log.d("patate", "action: ")
+                    action()
+                }
+
+                action()
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        //Toast.makeText(this, "Actualisation...", Toast.LENGTH_SHORT).show()
         thread.start()
     }
 }

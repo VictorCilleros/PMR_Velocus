@@ -103,13 +103,13 @@ class CameraView : SuperView {
                     }
 
                     for (i in 0 until nb_station_affichage){
-                        if (list_distance_station_plus_proche[i]!=1000000000){
-                            var teta__ =angle_vecteur(this.mLatitudeTextView,this.mLongitudeTextView, this.a?.stations!![list_indice_station_plus_proche[i]].latitude, this.a?.stations!![list_indice_station_plus_proche[i]].longitude)
+                        if (list_distance_station_plus_proche[nb_station_affichage-i-1]!=1000000000){
+                            var teta__ =angle_vecteur(this.mLatitudeTextView,this.mLongitudeTextView, this.a?.stations!![list_indice_station_plus_proche[nb_station_affichage-i-1]].latitude, this.a?.stations!![list_indice_station_plus_proche[nb_station_affichage-i-1]].longitude)
                             if (teta__ > orientation_rad-(a!!.thetaH)/2 && teta__ < orientation_rad+(a!!.thetaH)/2){
 
                                 var x =width*(((teta__-orientation_rad+(a!!.thetaH)/2)/ a!!.thetaH).toFloat())
 
-                                Draw_station(a!!.stations?.get(list_indice_station_plus_proche[i])!!, canvas, x)
+                                Draw_station(a!!.stations?.get(list_indice_station_plus_proche[nb_station_affichage-i-1])!!, canvas, x)
                             }
                         }
                     }
