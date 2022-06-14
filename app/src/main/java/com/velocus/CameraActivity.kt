@@ -90,9 +90,9 @@ class CameraActivity : AppCompatActivity() {
 
         verifyAudioPermissions()
 
-        val btnMicro = findViewById<ImageButton>(R.id.btn_micro)
+        val btnMicroCam = findViewById<ImageButton>(R.id.btn_micro_cam)
 
-        btnMicro.setOnClickListener {
+        btnMicroCam.setOnClickListener {
             askSpeechInput()
         }
     }
