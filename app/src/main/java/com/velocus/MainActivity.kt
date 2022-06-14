@@ -1,19 +1,24 @@
 package com.velocus
 
 import android.Manifest
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.Manifest.permission.RECORD_AUDIO
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import androidx.core.app.ActivityCompat
+import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.URL
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -54,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         btnMicro.setOnClickListener {
             askSpeechInput()
         }
-
     }
 
     private fun askSpeechInput() {

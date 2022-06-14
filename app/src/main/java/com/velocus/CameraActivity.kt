@@ -26,6 +26,9 @@ import com.velocus.BaseDeDonnee.DatabaseManager
 import com.velocus.View.CameraView
 import com.velocus.model.Gps
 import com.velocus.model.Station
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.URL
 import java.util.*
 
 class CameraActivity : AppCompatActivity() {
@@ -76,11 +79,12 @@ class CameraActivity : AppCompatActivity() {
 
         databaseManager = DatabaseManager(this)
 
-        stations = MutableList<Station>(1){Station(50.62723799221388,3.109268199357267,"Mairie d'Hellemmes",24,8) }
-        stations!!.add(Station(50.619122956331886,3.1264709816213587,"Villeneuve-d'Ascq",27,22))
-        stations!!.add(Station(50.63701166075154,3.0707240415241044,"Gare Lille Flandres",19,0))
+        stations = MutableList<Station>(1){Station(0,50.62723799221388,3.109268199357267,"Mairie d'Hellemmes",24,8) }
+        stations!!.add(Station(1,50.619122956331886,3.1264709816213587,"Villeneuve-d'Ascq",27,22))
+        stations!!.add(Station(2,50.63701166075154,3.0707240415241044,"Gare Lille Flandres",19,0))
 
         if (databaseManager.nb_stations()==0){
+            getCode("https://www.ilevia.fr/cms/institutionnel/velo/stations-vlille/")
             for (i in 0..2){
                 databaseManager.insert_station(stations!![i])
             }
@@ -97,6 +101,8 @@ class CameraActivity : AppCompatActivity() {
         btnMicroCam.setOnClickListener {
             askSpeechInput()
         }
+
+        getCode("https://www.ilevia.fr/cms/institutionnel/velo/stations-vlille/")
     }
 
     public override fun onResume() {
@@ -208,5 +214,20 @@ class CameraActivity : AppCompatActivity() {
                 Toast.makeText(this, "Désolé, je ne comprends pas cette commande : ${vocal.lowercase()}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    fun getCode(url: String?) {
+        var thread = Thread {
+            try {
+                var code = ""
+                val site = URL(url)
+                var buff = BufferedReader(InputStreamReader(site.openStream()))
+                Log.d("patate", buff.readLines().toString())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        thread.start()
     }
 }

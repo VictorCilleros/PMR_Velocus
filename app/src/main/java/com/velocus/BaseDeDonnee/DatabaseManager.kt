@@ -16,7 +16,7 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
 
     override fun onCreate(db: SQLiteDatabase) { // Création de la table des Stations
         var strSql = "create table Station (" +
-                " idStation integer primary key autoincrement," +
+                " idStation integer primary key," +
                 " latitude real not null," +
                 " longitude real not null," +
                 " nom text not null," +
@@ -41,7 +41,7 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
 
     fun is_in_stations(nom_station: kotlin.String): Boolean{// Fonction retournant si une station dans la base de donnée possède bien ce nom
         var nom_ = nom_station.replace("'","''")
-        val cur = this.writableDatabase.rawQuery("Select COUNT(*) FROM Station Where nom = '$nom_' COLLATE NOCASE", null)
+        val cur = this.writableDatabase.rawQuery("Select COUNT(*) FROM Station Where nom = '$nom_' COLLATE NOCASE ", null)
         cur.moveToFirst()
         return cur.getInt(0)!=0
     }
@@ -49,7 +49,8 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
     fun insert_station(station : Station) { // Insertion d'une nouvelle station
         var nom_ = station.nom.replace("'","''")
 
-        val strSql = "insert into Station (latitude,longitude,nom,nb_place_tot,nb_place_dispo) values (" +
+        val strSql = "insert into Station (idStation,latitude,longitude,nom,nb_place_tot,nb_place_dispo) values (" +
+                    " $station.numero ," +
                     " $station.latitude ," +
                     " $station.longitude ," +
                     " '$nom_' ," +
@@ -58,10 +59,10 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
         this.writableDatabase.execSQL(strSql)
     }
 
-    fun update_station(nb_place_dispo : Int, latitude : Double, longitude : Double) {  // Modification du nombre de place disponible d'une station retrouvé selon sa latitude et sa longitude
+    fun update_station(nb_place_dispo : Int, numero : Int) {  // Modification du nombre de place disponible d'une station retrouvé selon sa latitude et sa longitude
         val strSql = "Update Station set " +
                 "nb_place_dispo = $nb_place_dispo " +
-                "where latitude = $latitude and longitude = $longitude"
+                "where idStation = $numero "
         this.writableDatabase.execSQL(strSql)
     }
 
@@ -74,9 +75,9 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
         val cursor = this.writableDatabase.rawQuery("select * from Station", null)
         cursor.moveToFirst()
         if (!cursor.isAfterLast){
-            var stations = MutableList<Station>(1){Station(cursor.getDouble(1),cursor.getDouble(2),cursor.getString(3),cursor.getInt(4),cursor.getInt(5)) }
+            var stations = MutableList<Station>(1){Station(cursor.getInt(0),cursor.getDouble(1),cursor.getDouble(2),cursor.getString(3),cursor.getInt(4),cursor.getInt(5)) }
             while (!cursor.isAfterLast) {
-                stations.add(Station(cursor.getDouble(1),cursor.getDouble(2),cursor.getString(3),cursor.getInt(4),cursor.getInt(5)))
+                stations.add(Station(cursor.getInt(0),cursor.getDouble(1),cursor.getDouble(2),cursor.getString(3),cursor.getInt(4),cursor.getInt(5)))
                 cursor.moveToNext()
             }
             return stations
