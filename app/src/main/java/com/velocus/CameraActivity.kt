@@ -84,7 +84,14 @@ class CameraActivity : AppCompatActivity() {
             getCode("https://www.ilevia.fr/cms/institutionnel/velo/stations-vlille/")
         }else{
             stations = databaseManager.genrerate_stations()!!
+            Log.d("patate", "onCreate: ")
         }
+
+        var s = ""
+        for (i in 0 until stations.size){
+            s+=stations[i].toString()+" ; "
+        }
+        Log.d("patate", "onCreate: $s")
 
         cameraView.a=this // On passel'activité dans cameraView une fois que cette dernière est créé
 

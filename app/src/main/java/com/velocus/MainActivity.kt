@@ -23,8 +23,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var mStartButton: Button? = null
     private var mCameraButton: Button? = null
+    private var imgButtonSettings: ImageButton?= null
 
     private val ASR_PERMISSION_REQUEST_CODE = 0
 
@@ -32,21 +32,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Bouton pour passer au test du GPS:
-
-        mStartButton = findViewById<View>(R.id.button2) as Button
-
-        mStartButton!!.setOnClickListener(View.OnClickListener {
-            val mainActivityIntent = Intent(this@MainActivity, TestGpsActivity::class.java)
-            startActivity(mainActivityIntent)
-        })
-
-        // Bouton pour passer au test de la Caméra:
+        // Bouton pour passer au test de la Caméra :
 
         mCameraButton = findViewById<View>(R.id.camerabutton) as Button
 
         mCameraButton!!.setOnClickListener(View.OnClickListener {
             val mainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
+            startActivity(mainActivityIntent)
+        })
+
+        // Bouton pour passer au settings :
+
+        imgButtonSettings = findViewById(R.id.settings) as ImageButton
+
+        imgButtonSettings!!.setOnClickListener (View.OnClickListener {
+            val mainActivityIntent = Intent(this@MainActivity, Settings::class.java)
             startActivity(mainActivityIntent)
         })
 
@@ -77,11 +77,9 @@ class MainActivity : AppCompatActivity() {
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
-            val tvText = findViewById<TextView>(R.id.tv_text)
 
             if (it.resultCode == Activity.RESULT_OK) {
                 val result = it.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                tvText.text = result?.get(0).toString()
                 handleCommands(result?.get(0).toString())
             }
         }

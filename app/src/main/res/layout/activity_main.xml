@@ -4,66 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
+    android:padding="0dp"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/f"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/fondecran"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/i"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/pointeur"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.572" />
+
+    <ImageView
+        android:id="@+id/v"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/v"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.752"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.697" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="50dp"
+        android:text="Vélocus"
+        app:layout_constraintBottom_toTopOf="@+id/camerabutton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Test GPS"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.34" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.746" />
 
     <ImageButton
         android:id="@+id/btn_micro"
-        android:contentDescription="black microphone"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"
+        android:layout_margin="50dp"
+        android:background="@null"
+        android:contentDescription="black microphone"
         android:scaleType="fitXY"
         android:src="@drawable/microphone"
-        android:background="@null"
-        android:layout_margin="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2">
-    </ImageButton>
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    <TextView
-        android:id="@+id/tv_text"
-        android:layout_margin="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
+    <ImageButton
+        android:id="@+id/settings"
+        android:layout_width="75dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="0dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/help"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.877"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_micro"
-        android:layout_below="@id/btn_micro"
-        android:textColor="@color/black"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.064" />
 
     <Button
         android:id="@+id/camerabutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Test Caméra"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        android:text="Démarrer"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="@+id/f" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
