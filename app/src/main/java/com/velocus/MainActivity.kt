@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
         else if (vocal.lowercase() == "arrêter") {
             Toast.makeText(this, "Et puis l'affichage s'arrête !", Toast.LENGTH_SHORT).show()
-            // TODO arrêter l'affichage
+            this.finish() // On ferme l'appli
         }
         else {Toast.makeText(this, "Désolé, je ne comprends pas cette commande", Toast.LENGTH_SHORT).show()}
 

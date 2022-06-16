@@ -10,7 +10,7 @@ import java.lang.String
 /**
  * Created by 2poiz' on 11/06/2022
  */
-class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.db", null, 2){
+class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.db", null, 3){
 
     // Base de donnée pour stocker dans la mémoir morte toutes les caractéristiques de toutes les stations :
 
@@ -50,12 +50,12 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
         var nom_ = station.nom.replace("'","''")
 
         val strSql = "insert into Station (idStation,latitude,longitude,nom,nb_place_tot,nb_place_dispo) values (" +
-                    " $station.numero ," +
-                    " $station.latitude ," +
-                    " $station.longitude ," +
+                    " ${station.numero} ," +
+                    " ${station.latitude} ," +
+                    " ${station.longitude} ," +
                     " '$nom_' ," +
-                    " $station.nb_place_tot ," +
-                    " $station.nb_place_dispo )"
+                    " ${station.nb_place_tot} ," +
+                    " ${station.nb_place_dispo} )"
         this.writableDatabase.execSQL(strSql)
     }
 
@@ -66,7 +66,7 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
         this.writableDatabase.execSQL(strSql)
     }
 
-    fun delete_stations() { // Supprimer une station
+    fun delete_stations() { // Supprimer toutes les stations
         val strSql = "delete from Station"
         this.writableDatabase.execSQL(strSql)
     }

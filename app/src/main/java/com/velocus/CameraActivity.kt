@@ -80,22 +80,13 @@ class CameraActivity : AppCompatActivity() {
 
         databaseManager = DatabaseManager(this)
 
-        /*
-        stations = MutableList<Station>(1){Station(0,50.62723799221388,3.109268199357267,"Mairie d'Hellemmes",24,8) }
-        stations!!.add(Station(1,50.619122956331886,3.1264709816213587,"Villeneuve-d'Ascq",27,22))
-        stations!!.add(Station(2,50.63701166075154,3.0707240415241044,"Gare Lille Flandres",19,0))*/
-
         if (databaseManager.nb_stations()==0){
             getCode("https://www.ilevia.fr/cms/institutionnel/velo/stations-vlille/")
-            /*
-            for (i in 1..225){
-                databaseManager.insert_station(stations!![i])
-            }*/
         }else{
             stations = databaseManager.genrerate_stations()!!
         }
 
-        cameraView.a=this
+        cameraView.a=this // On passel'activité dans cameraView une fois que cette dernière est créé
 
         verifyAudioPermissions()
 
@@ -203,7 +194,26 @@ class CameraActivity : AppCompatActivity() {
             Toast.makeText(this, "Et puis l'affichage s'arrête !", Toast.LENGTH_SHORT).show()
 
             this.finish()
-        } else {
+        } else if(vocal.lowercase() == "vélo"){
+            cameraView.mode_velo=true
+            cameraView.invalidate()
+        } else if(vocal.lowercase() == "piéton"){
+            cameraView.mode_velo=false
+            cameraView.invalidate()
+        } else if(vocal.lowercase().contains("m")){
+            var MyString = vocal.lowercase().substring(0,vocal.lowercase().indexOf("m")-1)
+
+            if (MyString.matches(Regex("[+-]?\\d*(\\.\\d+)?"))){
+                this.cameraView.distance_search=MyString.toInt()
+                Toast.makeText(this, "Mode Radius activé ! (${this.cameraView.distance_search} m)", Toast.LENGTH_SHORT).show()
+                this.cameraView.nom_station_select = ""
+                this.cameraView.nb_station_affichage = 0
+                cameraView.invalidate()
+            }else{
+                Toast.makeText(this, "Désolé, je ne comprends pas cette commande : ${vocal.lowercase()}", Toast.LENGTH_SHORT).show()
+            }
+
+        }else{
             var compt = 0
             for (i in this.stations!!) {
                 if (i.nom.equals(vocal.lowercase(), true)) {
@@ -238,7 +248,6 @@ class CameraActivity : AppCompatActivity() {
                     buff.readLine()
                 }
 
-
                 for (i in 1..225){
                     buff.readLine()
                     var ligne2 = buff.readLine()
@@ -267,6 +276,10 @@ class CameraActivity : AppCompatActivity() {
                     buff.readLine()
 
                     stations.add(Station(nb,lat,lon,nom,nb_velo_dispo+nb_place_dispo,nb_place_dispo))
+                }
+
+                for (i in 0..224){
+                    databaseManager.insert_station(stations!![i])
                 }
 
             } catch (e: Exception) {
@@ -313,6 +326,11 @@ class CameraActivity : AppCompatActivity() {
                             }
                         }
                     }
+
+                    for (i in 0  until stations.size){
+                        databaseManager.update_station(stations[i].nb_place_dispo,stations[i].numero)
+                    }
+
                     sleep(60000)
                     //Log.d("patate", "action: ")
                     action()
