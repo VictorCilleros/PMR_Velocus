@@ -16,6 +16,8 @@ import com.velocus.R
  */
 abstract class SuperView: View, GestureDetector.OnGestureListener {
 
+    // Class abtraite permettant de gérer les méthodes et atributs des instances étendu de View :
+
     // Couleur :
     var red: Int=0
     var black: Int=0
@@ -28,9 +30,9 @@ abstract class SuperView: View, GestureDetector.OnGestureListener {
 
     var paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    // Attribues permettant l'affichae :
-    var mLatitudeTextView: Double = 0.0 //Lattitude
-    var mLongitudeTextView: Double =0.0 //Longitude
+    // Attribues permettant le traitement des données GPS/orientation :
+    var mLatitude: Double = 0.0 //Lattitude
+    var mLongitude: Double =0.0 //Longitude
     var orientation : Float = 0F //Angle magnétique entre 0 et 360°
 
     constructor(context: Context?) : super(context) {
