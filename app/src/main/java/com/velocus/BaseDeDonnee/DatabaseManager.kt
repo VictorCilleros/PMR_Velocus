@@ -39,7 +39,7 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
         return cur.getInt(0)
     }
 
-    fun is_in_stations(nom_station: kotlin.String): Boolean{// Fonction retournant si une station dans la base de donnée possède bien ce nom
+    fun is_in_stations(nom_station: kotlin.String): Boolean{ // Fonction retournant si une station dans la base de donnée possède bien ce nom
         var nom_ = nom_station.replace("'","''")
         val cur = this.writableDatabase.rawQuery("Select COUNT(*) FROM Station Where nom = '$nom_' COLLATE NOCASE ", null)
         cur.moveToFirst()

@@ -18,6 +18,8 @@ import kotlin.math.max
  */
 class CameraView : SuperView {
 
+    // Class permettant de traiter l'afficher :
+
     var a : CameraActivity? = null // Récupération de l'activité context lié à cette view
 
     var imgCursor: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.pointeur) // Récupération de l'image du pointeur
@@ -25,12 +27,15 @@ class CameraView : SuperView {
     var imgPieton: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.pieton) // Récupération de l'image du pieton
 
     // Attribut permettant de gérer les différents mode d'affichage :
+
     var nb_station_affichage : Int = 6
+    var nom_station_select : String = ""
+    var distance_search : Int = 3000 // en mètre
+
     // Si nb_station_affichage == 0 : Mode radius avec distance_search
     // Si nb_station_affichage == 1 et nom_station_select == un nom de station : Mode station unique (affiche uniquement la station enrefgistrer nom_station_select)
     // Sinon affiche les nb_station_affichage les plus proche
-    var nom_station_select : String = ""
-    var distance_search : Int = 3000 // en mètre
+
 
     var mode_velo : Boolean = true // true => on affiche les place dispo : false => on affiche les vélos dispo
 
@@ -46,7 +51,7 @@ class CameraView : SuperView {
         super.onSizeChanged(w, h, oldw, oldh)
 
         // Fonction appelé lorsque la taille change (y compris au lancement de l'activité)
-        // Cela nous permet de redimentionné l'image de fond d'écran :
+        // Cela nous permet de redimentionné les images :
         if (BitmapFactory.decodeResource(resources, R.drawable.png) != null) {
             imgCursor = BitmapFactory.decodeResource(resources, R.drawable.pointeur)
             imgCursor = Bitmap.createScaledBitmap(imgCursor, (width/5).toInt(), (width/5).toInt(), true)
@@ -64,13 +69,14 @@ class CameraView : SuperView {
         if (canvas != null) {
             // On affiche ce qu'on veux ici :
 
+            // Affichage de l'image en haut au centre indiquant à l'utilisateur s'il est en mode vélo ou en mode piéton :
             if (this.mode_velo){
                 canvas.drawBitmap(imgVelo,(width/2-(width/10)).toFloat(),f(50),paint)
             }else{
                 canvas.drawBitmap(imgPieton,(width/2-(width/20)).toFloat(),f(50),paint)
             }
 
-            // Parramétrage de pint pour les éléments textuels :
+            // Parramétrage de paint pour les éléments textuels :
             paint.setColor(red)
             paint.setTextAlign(Paint.Align.CENTER)
             paint.setTextSize((width / 20).toFloat())
@@ -82,57 +88,31 @@ class CameraView : SuperView {
             // Récupération de l'angle entre l'utilisateur et le Nord
             var orientation_rad = Math.toRadians(this.orientation.toDouble())
 
-            Log.d("orientation", "orientation: ${this.orientation}")
+            //Log.d("orientation", "orientation: ${this.orientation}")
 
             if (this.a?.stations!=null){
 
                 if (nb_station_affichage==0){ // Mode Radius
-                    for (i in 0 until this.a?.stations!!.size){
-                        if (distance(Math.toRadians(this.mLatitudeTextView),Math.toRadians(this.mLongitudeTextView),Math.toRadians(a!!.stations?.get(i)!!.latitude),Math.toRadians(a!!.stations?.get(i)!!.longitude))<distance_search){
-                            var teta__ =angle_vecteur(this.mLatitudeTextView,this.mLongitudeTextView, this.a?.stations!![i].latitude, this.a?.stations!![i].longitude)
-                            if (is_in_vue(teta__, orientation_rad)){
-                                var orien = orientation_rad
-                                var te = teta__
-
-                                if (orientation_rad<(a!!.thetaH)/2){
-                                    orien=orientation_rad+(a!!.thetaH)/2
-                                    te=(teta__+(a!!.thetaH)/2)%(2*PI)
-                                }else if (orientation_rad>(2*PI)-(a!!.thetaH)/2){
-                                    orien=orientation_rad-(a!!.thetaH)/2
-                                    te=((2*PI)+teta__-(a!!.thetaH)/2)%(2*PI)
-                                }
-
-                                var x = width*(((te-orien+(a!!.thetaH)/2)/ a!!.thetaH).toFloat())
-                                Draw_station(a!!.stations?.get(i)!!, canvas, x)
-                            }
+                    for (i in 0 until this.a?.stations!!.size){ // Recherche de toutes les station dans le périmètre défini
+                        if (distance(Math.toRadians(this.mLatitude),Math.toRadians(this.mLongitude),Math.toRadians(a!!.stations?.get(i)!!.latitude),Math.toRadians(a!!.stations?.get(i)!!.longitude))<distance_search){
+                            var teta__ =angle_vecteur(this.mLatitude,this.mLongitude, this.a?.stations!![i].latitude, this.a?.stations!![i].longitude)
+                            is_draw_station(teta__,orientation_rad,canvas,i)
                         }
                     }
+
                 }else if(nb_station_affichage==1 && nom_station_select!=""){ // Mode station unique
                     for (i in 0 until this.a?.stations!!.size){
                         if (a!!.stations?.get(i)!!.nom.equals(nom_station_select)){
-                            var teta__ =angle_vecteur(this.mLatitudeTextView,this.mLongitudeTextView, this.a?.stations!![i].latitude, this.a?.stations!![i].longitude)
-                            if (is_in_vue(teta__, orientation_rad)){
-                                var orien = orientation_rad
-                                var te = teta__
-
-                                if (orientation_rad<(a!!.thetaH)/2){
-                                    orien=orientation_rad+(a!!.thetaH)/2
-                                    te=(teta__+(a!!.thetaH)/2)%(2*PI)
-                                }else if (orientation_rad>(2*PI)-(a!!.thetaH)/2){
-                                    orien=orientation_rad-(a!!.thetaH)/2
-                                    te=((2*PI)+teta__-(a!!.thetaH)/2)%(2*PI)
-                                }
-
-                                var x = width*(((te-orien+(a!!.thetaH)/2)/ a!!.thetaH).toFloat())
-                                Draw_station(a!!.stations?.get(i)!!, canvas, x)
-                            }
+                            var teta__ =angle_vecteur(this.mLatitude,this.mLongitude, this.a?.stations!![i].latitude, this.a?.stations!![i].longitude)
+                            is_draw_station(teta__,orientation_rad,canvas,i)
                         }
                     }
+
                 }else{ // Mode x station plus proche
                     var list_indice_station_plus_proche = MutableList(nb_station_affichage){index ->  0}
                     var list_distance_station_plus_proche = MutableList(nb_station_affichage){index ->  1000000000}
-                    for (i in 0 until this.a?.stations!!.size){
-                        var d = distance(Math.toRadians(this.mLatitudeTextView),Math.toRadians(this.mLongitudeTextView),Math.toRadians(a!!.stations?.get(i)!!.latitude),Math.toRadians(a!!.stations?.get(i)!!.longitude))
+                    for (i in 0 until this.a?.stations!!.size){ // Classement des x stations les plus proches
+                        var d = distance(Math.toRadians(this.mLatitude),Math.toRadians(this.mLongitude),Math.toRadians(a!!.stations?.get(i)!!.latitude),Math.toRadians(a!!.stations?.get(i)!!.longitude))
                         for (j in 0 until nb_station_affichage){
                             if (d<list_distance_station_plus_proche[j]){
                                 list_indice_station_plus_proche[j]=i
@@ -144,27 +124,8 @@ class CameraView : SuperView {
 
                     for (i in 0 until nb_station_affichage){
                         if (list_distance_station_plus_proche[nb_station_affichage-i-1]!=1000000000){
-                            var teta__ =angle_vecteur(this.mLatitudeTextView,this.mLongitudeTextView, this.a?.stations!![list_indice_station_plus_proche[nb_station_affichage-i-1]].latitude, this.a?.stations!![list_indice_station_plus_proche[nb_station_affichage-i-1]].longitude)
-                            if (is_in_vue(teta__, orientation_rad)){
-
-                                //Log.d("patate", "onDraw: ${teta__} ; ${orientation_rad} ; ${(a!!.thetaH)/2}")
-                                //Log.d("patate", "onDraw: ${a!!.stations?.get(list_indice_station_plus_proche[nb_station_affichage-i-1])!!.nom}")
-
-                                var orien = orientation_rad
-                                var te = teta__
-
-                                if (orientation_rad<(a!!.thetaH)/2){
-                                    orien=orientation_rad+(a!!.thetaH)/2
-                                    te=(teta__+(a!!.thetaH)/2)%(2*PI)
-                                }else if (orientation_rad>(2*PI)-(a!!.thetaH)/2){
-                                    orien=orientation_rad-(a!!.thetaH)/2
-                                    te=((2*PI)+teta__-(a!!.thetaH)/2)%(2*PI)
-                                }
-
-                                var x = width*(((te-orien+(a!!.thetaH)/2)/ a!!.thetaH).toFloat())
-
-                                Draw_station(a!!.stations?.get(list_indice_station_plus_proche[nb_station_affichage-i-1])!!, canvas, x)
-                            }
+                            var teta__ =angle_vecteur(this.mLatitude,this.mLongitude, this.a?.stations!![list_indice_station_plus_proche[nb_station_affichage-i-1]].latitude, this.a?.stations!![list_indice_station_plus_proche[nb_station_affichage-i-1]].longitude)
+                            is_draw_station(teta__,orientation_rad,canvas,list_indice_station_plus_proche[nb_station_affichage-i-1])
                         }
                     }
                 }
@@ -172,17 +133,35 @@ class CameraView : SuperView {
         }
     }
 
-    fun Draw_station(s : Station, canvas : Canvas, x :Float){
-        var distance_ = distance(Math.toRadians(this.mLatitudeTextView),Math.toRadians(this.mLongitudeTextView),Math.toRadians(s.latitude),Math.toRadians(s.longitude))
+    // Fonction déterminant la position sur l'écran utilisateur des station à afficher :
+    fun is_draw_station(teta__ : Double, orientation_rad: Double, canvas: Canvas, i : Int){
+        if (is_in_vue(teta__, orientation_rad)){
+            var orien = orientation_rad
+            var te = teta__
 
+            if (orientation_rad<(a!!.thetaH)/2){
+                orien=orientation_rad+(a!!.thetaH)/2
+                te=(teta__+(a!!.thetaH)/2)%(2*PI)
+            }else if (orientation_rad>(2*PI)-(a!!.thetaH)/2){
+                orien=orientation_rad-(a!!.thetaH)/2
+                te=((2*PI)+teta__-(a!!.thetaH)/2)%(2*PI)
+            }
+
+            var x = width*(((te-orien+(a!!.thetaH)/2)/ a!!.thetaH).toFloat())
+            Draw_station(a!!.stations?.get(i)!!, canvas, x)
+        }
+    }
+
+    // Affichage d'uns station :
+    fun Draw_station(s : Station, canvas : Canvas, x :Float){
+        // Récupération de la distance en mètre entre l'utilisateur et la station à afficher
+        var distance_ = distance(Math.toRadians(this.mLatitude),Math.toRadians(this.mLongitude),Math.toRadians(s.latitude),Math.toRadians(s.longitude))
+
+        // Détermination des facteur de réduction proportionnel à la distance de la station :
         var proportion_distance = min(max(distance_,100),distance_search)-100
         var ecart_entre_les_texts = 75 - proportion_distance*35/(distance_search-100)
 
-        if (distance_>1000){
-            var filter = LightingColorFilter(0xFFFFFF, 0xA0A0A0)
-            paint.setColorFilter(filter)
-        }
-
+        // Initialisation du filtre proportionnel à la distance de la station :
         var filter = LightingColorFilter(0xFFFFFF, 0x000000)
 
         when(proportion_distance){
@@ -197,28 +176,34 @@ class CameraView : SuperView {
             in (distance_search-100)*9/10..(distance_search-100)-> filter = LightingColorFilter(0xFFFFFF, 0x909090)
         }
 
+        // On applique le filtre à notre paint :
         paint.setColorFilter(filter)
 
+        // Affichage du nom de la station :
         paint.setColor(red)
         paint.setTextAlign(Paint.Align.CENTER)
         paint.setTextSize((width / (15+proportion_distance*15/(distance_search-100))).toFloat())
         canvas.drawText(s.nom,x, (height/4).toFloat()-ecart_entre_les_texts,paint)
 
+        // Affichage du nom de place totale de la station :
         paint.setTextSize((width / (20+proportion_distance*15/(distance_search-100))).toFloat())
         canvas.drawText("Nb place total : "+s.nb_place_tot.toString(),x, (height/4).toFloat()+ecart_entre_les_texts,paint)
 
+        // Affichage de la distance entre l'utilisateur et la station :
         if (distance_>1000){
             canvas.drawText("Distance : ${((distance_).toFloat()/1000)} km",x, (height/4).toFloat()+ecart_entre_les_texts*2,paint)
         }else{
             canvas.drawText("Distance : $distance_ m",x, (height/4).toFloat()+ecart_entre_les_texts*2,paint)
         }
 
+        // Redimentionnemnt du Bitmap du pointeur et affichage de ce dernier :
         var rogner = Bitmap.createScaledBitmap(imgCursor, (width/(5+proportion_distance*10/(distance_search-100))).toInt(), width/(5+proportion_distance*10/(distance_search-100)).toInt(), true)
         canvas.drawBitmap(rogner,x-(width/(5+proportion_distance*10/(distance_search-100)))/2,(height/4).toFloat()+ecart_entre_les_texts*3,paint)
 
+        // On enlève le filtre :
         paint.setColorFilter(null)
 
-        if (this.mode_velo){
+        if (this.mode_velo){ // Affichage du nombre de place vide disponible
             if (s.nb_place_dispo >=1){
                 paint.setColor(orange)
             }
@@ -226,7 +211,7 @@ class CameraView : SuperView {
                 paint.setColor(green)
             }
             canvas.drawText("Nb place dispo : "+s.nb_place_dispo.toString(),x, (height/4).toFloat(),paint)
-        }else{
+        }else{ // Affichage du nombre de vélo disponible
             var nb_veo_dispo = s.nb_place_tot-s.nb_place_dispo
             if (nb_veo_dispo >=1){
                 paint.setColor(orange)
@@ -238,6 +223,7 @@ class CameraView : SuperView {
         }
     }
 
+    // Fonction déterminant si l'angle de la station est dans le champ de vision de l'utilisateur :
     fun is_in_vue(teta__:Double, orientation_rad:Double):Boolean{
         if (orientation_rad<(a!!.thetaH)/2){
             return (teta__<orientation_rad+(a!!.thetaH)/2 || teta__>(2*PI)+orientation_rad-(a!!.thetaH)/2)
@@ -248,6 +234,7 @@ class CameraView : SuperView {
         }
     }
 
+    // Angle entre deux vecteurs :
     fun angle_vecteur(X_u : Double, Y_u : Double, X : Double, Y : Double):Double{
         var cos_ = (X-X_u)/(Math.sqrt((X-X_u)*(X-X_u)+(Y-Y_u)*(Y-Y_u)))
 

@@ -7,7 +7,6 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import java.io.IOException
 
-
 class CameraPreview(context: Context?, private var mCamera: Camera?) : SurfaceView(context), SurfaceHolder.Callback {
 
     // Class permettant de récupérer le flux vidéo de la caméra
@@ -28,7 +27,7 @@ class CameraPreview(context: Context?, private var mCamera: Camera?) : SurfaceVi
 
     fun refreshCamera(camera: Camera?) {
         if (mHolder.surface == null) {
-            // preview surface does not exist
+            // preview surface n'existe pas
             return
         }
         // stop preview before making changes

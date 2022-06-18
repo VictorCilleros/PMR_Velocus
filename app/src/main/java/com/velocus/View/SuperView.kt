@@ -31,8 +31,8 @@ abstract class SuperView: View, GestureDetector.OnGestureListener {
     var paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     // Attribues permettant le traitement des données GPS/orientation :
-    var mLatitudeTextView: Double = 0.0 //Lattitude
-    var mLongitudeTextView: Double =0.0 //Longitude
+    var mLatitude: Double = 0.0 //Lattitude
+    var mLongitude: Double =0.0 //Longitude
     var orientation : Float = 0F //Angle magnétique entre 0 et 360°
 
     constructor(context: Context?) : super(context) {

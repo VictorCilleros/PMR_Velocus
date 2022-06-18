@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Bouton pour passer au test de la Caméra :
+        // Bouton pour passer à l'activité principale (Caméra) :
 
         mCameraButton = findViewById<View>(R.id.camerabutton) as Button
 
@@ -50,9 +50,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(mainActivityIntent)
         })
 
-        verifyCameraPermissions()
+        // On vérifie si l'utilisateur à les permission nécessaire :
 
+        verifyCameraPermissions()
         verifyAudioPermissions()
+
+        // Bouton pour lancer la lecture micro :
 
         val btnMicro = findViewById<ImageButton>(R.id.btn_micro)
 
@@ -69,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
             i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say something!")
-            //startActivityForResult(i, RQ_SPEECH_REC)
+
             getResult.launch(i)
         }
     }
@@ -108,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         if (vocal.lowercase() == "démarrer") {
             Toast.makeText(this, "Et l'affichage démarre !", Toast.LENGTH_SHORT).show()
 
+            // Passage à l'activité caméra
             val mainActivityIntent = Intent(this@MainActivity, CameraActivity::class.java)
             startActivity(mainActivityIntent)
         }

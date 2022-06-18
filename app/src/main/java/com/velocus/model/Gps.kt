@@ -27,11 +27,12 @@ import com.google.android.gms.location.LocationServices
 import com.velocus.View.SuperView
 import java.lang.Math.abs
 
-
 /**
  * Created by 2poiz' on 20/05/2022
  */
 class Gps( var activity_ : Activity, var superView : SuperView) : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+
+    // Class permettant de récupérer et traiter les données GPS
 
     private val UPDATE_INTERVAL = (2 * 1000).toLong()  /* 10 secs */
     private val FASTEST_INTERVAL: Long = 2000          /* 2 sec */
@@ -199,12 +200,12 @@ class Gps( var activity_ : Activity, var superView : SuperView) : GoogleApiClien
                 location?.let { java.lang.Double.toString(it.longitude) }
         if (location != null) {
             // Moyenne glissante (on ne considère le changement d'orientation que si cette dernière est significative) :
-            if (abs((superView?.mLatitudeTextView*10000).toInt() - (location.latitude*10000).toInt())>=2){
-                superView?.mLatitudeTextView = location.latitude // Récupération de la latitude
+            if (abs((superView?.mLatitude*10000).toInt() - (location.latitude*10000).toInt())>=2){
+                superView?.mLatitude = location.latitude // Récupération de la latitude
                 superView?.invalidate() // Actualisation de l'affichage
             }
-            if (abs((superView?.mLongitudeTextView*10000).toInt() - (location.longitude*10000).toInt())>=2){
-                superView?.mLongitudeTextView = location.longitude // Récupération de la longitude
+            if (abs((superView?.mLongitude*10000).toInt() - (location.longitude*10000).toInt())>=2){
+                superView?.mLongitude = location.longitude // Récupération de la longitude
                 superView?.invalidate() // Actualisation de l'affichage
             }
         }
