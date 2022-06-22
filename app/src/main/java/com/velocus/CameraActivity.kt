@@ -250,7 +250,7 @@ class CameraActivity : AppCompatActivity() {
     // Récupération de toutes les données sur toutes les stations de puis le site d'ilévia :
 
     fun getCode(url: String?) {
-        var thread = Thread { // On ne peut pas utiliser le Main Thread pour faire des requettes internet
+        val thread = Thread { // On ne peut pas utiliser le Main Thread pour faire des requettes internet
             try {
                 val site = URL(url)
                 var buff = BufferedReader(InputStreamReader(site.openStream())) // Récupération du code source de la page internet sur un objet bufferedReader
@@ -311,7 +311,7 @@ class CameraActivity : AppCompatActivity() {
     // Fonction récursive sur son propre Thread pour aller chercher les informations mise à jours concernant l'état des station :
 
     fun actualisation(url: String?) {
-        var thread = Thread {
+        val thread = Thread {
             try {
                 fun action(){
                     val site = URL(url)
@@ -330,9 +330,12 @@ class CameraActivity : AppCompatActivity() {
                         buff.readLine()
                         buff.readLine()
                         buff.readLine()
-                        buff.readLine()
 
-                        // Récupération de l'information sur le nombre de vélo disponible
+                        // Récupération de l'information sur le nombre de vélo et de place disponible
+
+                        var ligne7 = buff.readLine()
+                        var nb_velo_dispo = ligne7.slice(33 until (ligne7.indexOf("</span>"))).toInt()
+
                         var ligne8 = buff.readLine()
                         var nb_place_dispo = ligne8.slice(34 until (ligne8.indexOf("</span>"))).toInt()
 
@@ -344,12 +347,13 @@ class CameraActivity : AppCompatActivity() {
                         for (i in 0  until stations.size){
                             if (stations[i].numero==nb){ // Mise à jour de l'info dans la liste des stations :
                                 stations[i].nb_place_dispo= nb_place_dispo
+                                stations[i].nb_place_tot= nb_place_dispo+nb_velo_dispo
                             }
                         }
                     }
 
                     for (i in 0  until stations.size){ // Mise à jours des données sur les 225 stations :
-                        databaseManager.update_station(stations[i].nb_place_dispo,stations[i].numero)
+                        databaseManager.update_station(stations[i].nb_place_dispo,stations[i].nb_place_tot,stations[i].numero)
                     }
 
                     // On attend une minute avant de regarder si les données ont été mises à jour :

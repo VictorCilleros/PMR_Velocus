@@ -59,9 +59,10 @@ class DatabaseManager(context: Context?) : SQLiteOpenHelper(context, "Stations.d
         this.writableDatabase.execSQL(strSql)
     }
 
-    fun update_station(nb_place_dispo : Int, numero : Int) {  // Modification du nombre de place disponible d'une station retrouvé selon sa latitude et sa longitude
+    fun update_station(nb_place_dispo : Int, nb_place_tot : Int, numero : Int) {  // Modification du nombre de place disponible d'une station retrouvé selon sa latitude et sa longitude
         val strSql = "Update Station set " +
-                "nb_place_dispo = $nb_place_dispo " +
+                "nb_place_dispo = $nb_place_dispo, " +
+                "nb_place_tot = $nb_place_tot " +
                 "where idStation = $numero "
         this.writableDatabase.execSQL(strSql)
     }
