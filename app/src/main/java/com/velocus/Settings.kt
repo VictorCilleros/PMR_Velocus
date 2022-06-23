@@ -5,7 +5,7 @@ import android.os.Bundle
 
 class Settings : AppCompatActivity() {
 
-    // Activité indiquant à l'utilisateur l'ensemble des commandes vocales activable
+    // Activité indiquant simplement à l'utilisateur l'ensemble des commandes vocales activable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

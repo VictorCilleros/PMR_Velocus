@@ -113,10 +113,13 @@ class CameraView : SuperView {
                     var list_distance_station_plus_proche = MutableList(nb_station_affichage){index ->  1000000000}
                     for (i in 0 until this.a?.stations!!.size){ // Classement des x stations les plus proches
                         var d = distance(Math.toRadians(this.mLatitude),Math.toRadians(this.mLongitude),Math.toRadians(a!!.stations?.get(i)!!.latitude),Math.toRadians(a!!.stations?.get(i)!!.longitude))
+
                         for (j in 0 until nb_station_affichage){
                             if (d<list_distance_station_plus_proche[j]){
-                                list_indice_station_plus_proche[j]=i
-                                list_distance_station_plus_proche[j]=d
+                                list_indice_station_plus_proche.add(j,i)
+                                list_distance_station_plus_proche.add(j,d)
+                                list_indice_station_plus_proche.remove(nb_station_affichage-1)
+                                list_distance_station_plus_proche.remove(nb_station_affichage-1)
                                 d = 1000000000
                             }
                         }
